@@ -52,12 +52,12 @@ public sealed class FaloopIntegrationPlugin : DivinationPlugin<FaloopIntegration
 
     private void OnConnected()
     {
-        Divination.Chat.Print("Faloop に接続しました！");
+        Divination.Chat.Print("Faloop Connected！");
     }
 
     private void OnDisconnected(string cause)
     {
-        Divination.Chat.Print("Faloop から切断されました。");
+        Divination.Chat.Print("Faloop Disconnected.");
         PluginLog.Warning("Disconnected = {Cause}", cause);
     }
 
@@ -180,7 +180,8 @@ public sealed class FaloopIntegrationPlugin : DivinationPlugin<FaloopIntegration
         payloads.AddRange(new Payload[]
         {
             new IconPayload(BitmapFontIcon.CrossWorld),
-            new TextPayload($"{world.Name} が湧きました。({FormatTimeSpan(spawn.Timestamp)})"),
+            new TextPayload($"{world.Name} ({FormatTimeSpan(spawn.Timestamp)})"),
+            // new TextPayload($"{world.Name}"),
         });
 
         Dalamud.ChatGui.PrintChat(new XivChatEntry
@@ -215,7 +216,8 @@ public sealed class FaloopIntegrationPlugin : DivinationPlugin<FaloopIntegration
                 GetRankIcon(rank),
                 new TextPayload($" {mob.Singular.RawString}"),
                 new IconPayload(BitmapFontIcon.CrossWorld),
-                new TextPayload($"{world.Name} が討伐されました。({FormatTimeSpan(death.StartedAt)})"),
+                new TextPayload($"{world.Name} ({FormatTimeSpan(death.StartedAt)})"),
+                // new TextPayload($"{world.Name}"),
             }),
             Type = Enum.GetValues<XivChatType>()[channel],
         });
@@ -290,23 +292,23 @@ public sealed class FaloopIntegrationPlugin : DivinationPlugin<FaloopIntegration
         var builder = new StringBuilder();
         if (span.Days > 0)
         {
-            builder.Append($"{span.Days}日前");
+            builder.Append($"{span.Days} days ago");
         }
         else if (span.Hours > 0)
         {
-            builder.Append($"{span.Hours}時間前");
+            builder.Append($"{span.Hours} hours ago");
         }
         else if (span.Minutes > 0)
         {
-            builder.Append($"{span.Minutes}分前");
+            builder.Append($"{span.Minutes} minutes ago");
         }
         else if (span.Seconds > 10)
         {
-            builder.Append($"{span.Seconds}秒前");
+            builder.Append($"{span.Seconds} seconds ago");
         }
         else
         {
-            builder.Append("たった今");
+            builder.Append("now");
         }
 
         return builder.ToString();
@@ -351,7 +353,7 @@ public sealed class FaloopIntegrationPlugin : DivinationPlugin<FaloopIntegration
     {
         if (string.IsNullOrWhiteSpace(Config.FaloopUsername) || string.IsNullOrWhiteSpace(Config.FaloopPassword))
         {
-            Divination.Chat.Print("Faloop のログイン情報が設定されていません。/faloop から設定できます。");
+            Divination.Chat.Print("Faloop login information not set properly.");
             return;
         }
 
